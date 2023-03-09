@@ -10,13 +10,13 @@
 
    
 <h4>
-    <a href="https://github.com/stijnvanhulle/kubb-plugin-template/">View Demo</a>
+    <a href="https://github.com/kubb-project/plugin-template/">View Demo</a>
   <span> · </span>
-    <a href="https://github.com/stijnvanhulle/kubb-plugin-template">Documentation</a>
+    <a href="https://github.com/kubb-project/plugin-template">Documentation</a>
   <span> · </span>
-    <a href="https://github.com/stijnvanhulle/kubb-plugin-template/issues/">Report Bug</a>
+    <a href="https://github.com/kubb-project/plugin-template/issues/">Report Bug</a>
   <span> · </span>
-    <a href="https://github.com/stijnvanhulle/kubb-plugin-template/issues/">Request Feature</a>
+    <a href="https://github.com/kubb-project/plugin-template/issues/">Request Feature</a>
   </h4>
 </div>
 

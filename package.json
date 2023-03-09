@@ -4,7 +4,7 @@
   "description": "Kubb plugin demo",
   "repository": {
     "type": "git",
-    "url": "git://github.com/stijnvanhulle/kubb-plugin-template.git"
+    "url": "git://github.com/kubb-project/plugin-template.git"
   },
   "license": "MIT",
   "author": "Stijn Van Hulle <stijn@stijnvanhulle.be",
