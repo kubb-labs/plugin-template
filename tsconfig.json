@@ -14,16 +14,19 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "typeRoots": [
-      "node_modules/@types"
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "types": [
+      "@kubb/core/globals",
+      "vitest/globals"
     ],
-    "paths": {
-    }
+    "paths": {}
   },
-  "include": ["./src/**/*"],
+  "include": [
+    "./src/**/*"
+  ],
   "exclude": [
     "**/node_modules",
-    "**/types/**",
     "**/*.test.ts"
   ]
 }
