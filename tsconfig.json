@@ -16,10 +16,6 @@
     "allowJs": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "types": [
-      "@kubb/core/globals",
-      "vitest/globals"
-    ],
     "paths": {}
   },
   "include": [

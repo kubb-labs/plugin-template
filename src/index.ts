@@ -1,5 +1,5 @@
 import { definePlugin } from './plugin'
 
-export * from './plugin'
+export { definePlugin, pluginName } from './plugin'
 export * from './types'
 export default definePlugin

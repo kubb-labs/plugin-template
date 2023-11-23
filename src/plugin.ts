@@ -1,42 +1,27 @@
 import pathParser from 'node:path'
 
-import { createPlugin, getPathMode, validatePlugins, writeIndexes } from '@kubb/core'
+import { FileManager, createPlugin } from '@kubb/core'
 import { pluginName as swaggerPluginName } from '@kubb/swagger'
 
 import { camelCase, camelCaseTransformMerge } from 'change-case'
 
-import type { File } from '@kubb/core'
-import type { API as SwaggerApi } from '@kubb/swagger'
+import type { KubbFile } from '@kubb/core'
 import type { PluginOptions } from './types.ts'
+import path from 'node:path'
 
-export const pluginName: PluginOptions['name'] = 'plugin-demo' as const
-
-// Register your plugin for maximum type safety
-declare module '@kubb/core' {
-  interface Register {
-    ['@kubb/plugin-demo']: PluginOptions['options']
-  }
-}
+export const pluginName = 'plugin-demo' satisfies PluginOptions['name']
+export const pluginKey: PluginOptions['key'] = [pluginName] satisfies PluginOptions['key']
 
 export const definePlugin = createPlugin<PluginOptions>((options) => {
   const { output = 'demo' } = options
-  let swaggerApi: SwaggerApi
 
   return {
     name: pluginName,
     options,
-    kind: 'controller',
-    validate(plugins) {
-      const valid = validatePlugins(plugins, [swaggerPluginName])
-      if (valid) {
-        swaggerApi = plugins.find((plugin) => plugin.name === swaggerPluginName)?.api as SwaggerApi
-      }
-
-      return valid
-    },
+    pre: [swaggerPluginName],
     resolvePath(fileName, directory, options) {
       const root = pathParser.resolve(this.config.root, this.config.output.path)
-      const mode = getPathMode(pathParser.resolve(root, output))
+      const mode = FileManager.getMode(path.resolve(root, output))
 
       if (mode === 'file') {
         /**
@@ -54,19 +39,19 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
     async buildStart() {
       // const oas = await swaggerApi.getOas()
 
-      const files: File[] = [
+      const files: KubbFile.File[] = [
         {
-          fileName: 'test.ts',
+          baseName: 'test.ts',
           path: this.resolvePath({
-            fileName: 'test.ts',
-            pluginName,
+            baseName: 'test.ts',
+            pluginKey: this.plugin.key,
           })!,
           source: "export const hello = 'world';",
         },
       ]
       await this.addFile(...files)
 
-      console.log('Build start')
+      console.log('Build started')
     },
     async buildEnd() {
       if (this.config.output.write === false) {
@@ -74,13 +59,16 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
       }
 
       const root = pathParser.resolve(this.config.root, this.config.output.path)
-      const files = await writeIndexes(root, { extensions: /\.ts/, exclude: [/schemas/, /json/] })
 
-      if (files) {
-        await this.addFile(...files)
-      }
-
-      console.log('Build end')
+      await this.fileManager.addIndexes({
+        root,
+        extName: '.ts',
+        meta: { pluginKey: this.plugin.key },
+        options: {
+          output,
+        },
+      })
+      console.log('Build ended')
     },
   }
 })
