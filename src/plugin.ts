@@ -13,7 +13,7 @@ export const pluginName = 'plugin-demo' satisfies PluginOptions['name']
 export const pluginKey: PluginOptions['key'] = [pluginName] satisfies PluginOptions['key']
 
 export const definePlugin = createPlugin<PluginOptions>((options) => {
-  const { output = 'demo' } = options
+  const { output = { path: 'demo' } } = options
 
   return {
     name: pluginName,
@@ -21,19 +21,19 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
     pre: [swaggerPluginName],
     resolvePath(fileName, directory, options) {
       const root = pathParser.resolve(this.config.root, this.config.output.path)
-      const mode = FileManager.getMode(path.resolve(root, output))
+      const mode = FileManager.getMode(path.resolve(root, output.path))
 
       if (mode === 'file') {
         /**
          * when output is a file then we will always append to the same file(output file), see fileManager.addOrAppend
          * Other plugins then need to call addOrAppend instead of just add from the fileManager class
          */
-        return pathParser.resolve(root, output)
+        return pathParser.resolve(root, output.path)
       }
 
-      return pathParser.resolve(root, output, fileName)
+      return pathParser.resolve(root, output.path, fileName)
     },
-    resolveName(name) {
+    resolveName(name, _type) {
       return camelCase(name, { delimiter: '', stripRegexp: /[^A-Z0-9$]/gi, transform: camelCaseTransformMerge })
     },
     async buildStart() {
@@ -60,14 +60,7 @@ export const definePlugin = createPlugin<PluginOptions>((options) => {
 
       const root = pathParser.resolve(this.config.root, this.config.output.path)
 
-      await this.fileManager.addIndexes({
-        root,
-        extName: '.ts',
-        meta: { pluginKey: this.plugin.key },
-        options: {
-          output,
-        },
-      })
+      await this.fileManager.addIndexes({ root, output, meta: { pluginKey: this.plugin.key } })
       console.log('Build ended')
     },
   }

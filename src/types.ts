@@ -5,7 +5,9 @@ export type Api = {
 }
 
 export type Options = {
-  output?: string
+  output?: {
+    path: string
+  }
 }
 
 type ResolvedOptions = {}
