@@ -16,6 +16,6 @@ export type PluginOptions = PluginFactoryOptions<'plugin-demo', Options, Resolve
 
 declare module '@kubb/core' {
   export interface _Register {
-    ['@kubb/swagger-tanstack-query']: PluginOptions
+    ['plugin-demo']: PluginOptions
   }
 }
